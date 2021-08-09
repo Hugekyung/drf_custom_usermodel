@@ -22,7 +22,7 @@ class MyUserManager(BaseUserManager):
 
     def create_superuser(self, email, name, nickname, password=None):
         """Create a new superuser"""
-        user = self.create_user(email, name=name, nickname=nickname, password=password,)
+        user = self.create_user(email, name, nickname, password=password,)
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self.db)
@@ -30,18 +30,19 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class MyUser(AbstractBaseUser):
+class MyUser(AbstractBaseUser, PermissionsMixin):
     # verbose_name: email 필드값 입력창에 대한 설명을 나타낸다.
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
-    name = models.CharField(max_length=100)
-    nickname = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
+    nickname = models.CharField(max_length=100, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = MyUserManager()
 
     USERNAME_FIELD = 'email' # email 필드를 고유식별자로 취급(pk), 기본제공 모델에서는 username이 pk
-    REQUIRED_FIELD = ['name', 'nickname'] # 항상 값이 가져야 하는 필드 지정
+    REQUIRED_FIELDS = ['name', 'nickname',] # createsuperuser를 통해 값을 입력받을 때 추가로 받을 정보들(FIELD에 S가 붙는다!! 신경쓰기)
 
     # 이메일 값을 문자열 값으로 리턴한다.
     def __str__(self):
