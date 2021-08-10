@@ -4,7 +4,6 @@ from accountapp import models
 
 
 class MyUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.MyUser
         fields = ('id', 'email', 'name', 'nickname', 'password')
@@ -25,3 +24,12 @@ class MyUserSerializer(serializers.ModelSerializer):
         )
 
         return user
+
+
+class BlogItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.BlogItem
+        fields = ('id', 'author', 'title', 'created_at')
+        extra_kwargs = {
+            'author': {'read_only': True}
+        }

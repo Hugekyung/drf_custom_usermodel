@@ -1,8 +1,12 @@
-from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.settings import api_settings
 
 from accountapp import models
 from accountapp import serializers
+from accountapp import permissions
 
 
 """
@@ -30,6 +34,32 @@ from accountapp import serializers
 
     - destroy (method DELETE)
 """
+"""
+    - authentication_classes와 permission_classes를 적용하는 방법에는 2가지가 있다. 1) settings에서 전역 설정하는 방법 2) 각 View 별로 설정하는 방법
+    - 아래의 경우 settings에서 별도로 설정하지 않고 View별로 다른 설정을 해줬다.
+    - 앱의 성격과 접근 권한의 상황 등에 따라 다르게 설정하면 된다.
+    - (TokenAuthentication,)와 같이 콤마를 꼭 적어야 오류가 안난다.
+"""
+"""
+    현재 문제: 메인페이지에서 로그인 후 다른 페이지로 넘어갈 때 로그인 유지가 안됨.
+"""
 class MyUserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MyUserSerializer
     queryset = models.MyUser.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
+
+
+class BlogItemViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.BlogItemSerializer
+    queryset = models.BlogItem.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnBlogItem, IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class UserLoginApiView(ObtainAuthToken):
+    """Handle creating user authentication tokens"""
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

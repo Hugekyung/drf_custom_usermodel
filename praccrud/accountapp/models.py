@@ -1,6 +1,7 @@
 # 표준 라이브러리 모듈(파이썬 or 장고 기본 모듈)
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
 
 
 class MyUserManager(BaseUserManager):
@@ -55,3 +56,13 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     # first name only
     def get_short_name(self):
         return self.name
+
+
+class BlogItem(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, blank=True)
+    text = models.TextField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
