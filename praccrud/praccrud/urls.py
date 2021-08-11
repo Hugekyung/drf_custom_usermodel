@@ -23,5 +23,5 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('api-auth/', include('rest_framework.urls')), # 로그인/로그아웃 기능
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')), # 로그인/로그아웃 기능
 ]

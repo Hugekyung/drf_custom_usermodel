@@ -54,7 +54,7 @@ class BlogItemViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BlogItemSerializer
     queryset = models.BlogItem.objects.all()
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (permissions.UpdateOwnBlogItem, IsAuthenticated,)
+    permission_classes = (permissions.UpdateOwnBlogItem,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
