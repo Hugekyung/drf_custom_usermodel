@@ -45,7 +45,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email' # email 필드를 고유식별자로 취급(pk), 기본제공 모델에서는 username이 pk
     REQUIRED_FIELDS = ['name', 'nickname',] # createsuperuser를 통해 값을 입력받을 때 추가로 받을 정보들(FIELD에 S가 붙는다!! 신경쓰기)
 
-    # 이메일 값을 문자열 값으로 리턴한다.
+    # 이메일 값을 문자열 값으로 리턴한다. 이 과정을 안거치면 객체 그대로만 출력되고 값은 알 수 없다.
     def __str__(self):
         return self.email
 

@@ -40,9 +40,7 @@ from accountapp import permissions
     - 앱의 성격과 접근 권한의 상황 등에 따라 다르게 설정하면 된다.
     - (TokenAuthentication,)와 같이 콤마를 꼭 적어야 오류가 안난다.
 """
-"""
-    현재 문제: 메인페이지에서 로그인 후 다른 페이지로 넘어갈 때 로그인 유지가 안됨.
-"""
+
 class MyUserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MyUserSerializer
     queryset = models.MyUser.objects.all()
